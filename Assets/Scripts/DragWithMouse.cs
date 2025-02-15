@@ -15,7 +15,7 @@ public class DragWithMouse : MonoBehaviour
         _rb = GetComponent<Rigidbody>();
     }
 
-    private void OnMouseDown()
+    void OnMouseDown()
     {
         _screenPoint = Camera.main.WorldToScreenPoint(gameObject.transform.position);
 
@@ -27,7 +27,7 @@ public class DragWithMouse : MonoBehaviour
         _nextPosition = Vector3.zero;
     }
 
-    private void OnMouseDrag()
+    void OnMouseDrag()
     {
         Vector3 curScreenPoint = new Vector3(Input.mousePosition.x, Input.mousePosition.y, _screenPoint.z);
         _nextPosition = Camera.main.ScreenToWorldPoint(curScreenPoint) + _offset;
