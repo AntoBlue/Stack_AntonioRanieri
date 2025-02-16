@@ -13,8 +13,7 @@ public class DragWithMouse : MonoBehaviour
     private Vector3 _nextPosition;
 
     bool grab;
-
-
+    bool zooming;
 
     public float rotatespeed = 100f;
 
@@ -24,7 +23,8 @@ public class DragWithMouse : MonoBehaviour
     }
 
     void OnMouseDown()
-    {
+    {    
+        //if 
         _screenPoint = Camera.main.WorldToScreenPoint(gameObject.transform.position);
 
         _offset = gameObject.transform.position -
@@ -42,6 +42,8 @@ public class DragWithMouse : MonoBehaviour
     {
         if(grab == true)
         {
+            //Rotation
+            //////////
             if (Input.GetKey(KeyCode.D))
             {
                 transform.Rotate(Vector3.right, rotatespeed * Time.deltaTime);
@@ -62,10 +64,38 @@ public class DragWithMouse : MonoBehaviour
                 transform.Rotate(Vector3.down, rotatespeed * Time.deltaTime);
             }
 
+            //Destroy
+            /////////
             if (Input.GetKey(KeyCode.Backspace))
             {
                 Destroy(gameObject);
             }
+
+            //Zoom in/out
+            ////
+            Vector3 zoomPosition;
+            if(Input.GetKey(KeyCode.UpArrow))
+            {
+                zoomPosition = transform.position;
+                transform.position += new Vector3(0f, 0f, (3f * Time.deltaTime));
+                zooming = true;
+                _nextPosition = zoomPosition;
+
+            }
+
+            if (Input.GetKey(KeyCode.DownArrow))
+            {
+                zoomPosition = transform.position;
+                transform.position += new Vector3(0f, 0f, (-3f * Time.deltaTime));
+                zooming = true;
+                _nextPosition = zoomPosition;
+            }
+
+            //if (Input.GetKeyUp(KeyCode.DownArrow) || Input.GetKeyUp(KeyCode.UpArrow))
+            //{
+                
+            //}
+
         }
     }
         
@@ -73,8 +103,16 @@ public class DragWithMouse : MonoBehaviour
 
     void OnMouseDrag()
     {
-        Vector3 curScreenPoint = new Vector3(Input.mousePosition.x, Input.mousePosition.y, _screenPoint.z);
-        _nextPosition = Camera.main.ScreenToWorldPoint(curScreenPoint) + _offset;
+        //if (zooming)
+        //{
+        //    _rb.isKinematic = true;
+        //}
+        if (!zooming)
+        {
+            Vector3 curScreenPoint = new Vector3(Input.mousePosition.x, Input.mousePosition.y, _screenPoint.z);
+            _nextPosition = Camera.main.ScreenToWorldPoint(curScreenPoint) + _offset;
+        }
+        
     }
 
     private void FixedUpdate()
@@ -90,5 +128,6 @@ public class DragWithMouse : MonoBehaviour
         _rb.isKinematic = false;
         _nextPosition = Vector3.zero;
         grab = false;
+        zooming = false;
     }
 }
